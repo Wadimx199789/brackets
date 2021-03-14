@@ -1,17 +1,29 @@
 module.exports = function check(str, bracketsConfig) {
-  let arr = str.split('');
-
-  for (let i = 0; i < arr.length; i++) {
-  for (let j = 0; j < bracketsConfig.length; j++) {
-    if (arr[i] === bracketsConfig[j][0] && arr[i + 1] === bracketsConfig[j][1]) {
-              arr.splice(i, 2);
-              i=-1;
-          }
+  let array = [];
+  for (let i = 0; i < bracketsConfig.length; i++) {
+    array = array.concat(bracketsConfig[i]);
   }
-  if (arr.length === 0){
-          return true;
-      }
-}
 
-return false;
+  let toClose = [];
+  for (let j = 0; j < str.length; j++) {
+    let last = toClose[toClose.length - 1];
+    if (array.indexOf(str[j]) % 2 == 0 && str[j] == array[array.indexOf(str[j]) + 1]) {
+      if (last !== str[j]) {
+        toClose.push(str[j]);
+      } else if (last == str[j]) {
+        toClose.pop();
+      }
+    } else if (array.indexOf(str[j]) % 2 == 0) {
+      toClose.push(str[j]);
+    }
+    if (array.indexOf(str[j]) % 2 !== 0) {
+      if (array.indexOf(last) == array.indexOf(str[j]) - 1) {
+        toClose.pop()
+      } else {
+        return false
+      }
+    }
+  }
+  if (toClose.length == 0) return true;
+  else return false;
 }
